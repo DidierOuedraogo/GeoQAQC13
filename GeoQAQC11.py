@@ -8,8 +8,7 @@ import base64
 import re
 import os
 import hashlib
-import datetime
-from datetime import datetime
+from datetime import datetime, timedelta
 from reportlab.lib.pagesizes import letter, A4
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Image, Table, TableStyle
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
@@ -379,13 +378,13 @@ def calculate_crm_limits(reference_value, tolerance_type, tolerance_value, refer
 if not st.session_state.authenticated:
     
     # Vérifier si le compte est verrouillé
-    if st.session_state.locked_until and datetime.datetime.now() < st.session_state.locked_until:
-        remaining_time = (st.session_state.locked_until - datetime.datetime.now()).seconds // 60
+    if st.session_state.locked_until and datetime.now() < st.session_state.locked_until:
+        remaining_time = (st.session_state.locked_until - datetime.now()).seconds // 60
         st.error(f"Trop de tentatives échouées. Compte verrouillé pour {remaining_time} minutes.")
         st.stop()
     else:
         # Réinitialiser le verrouillage s'il est expiré
-        if st.session_state.locked_until and datetime.datetime.now() >= st.session_state.locked_until:
+        if st.session_state.locked_until and datetime.now() >= st.session_state.locked_until:
             st.session_state.failed_attempts = 0
             st.session_state.locked_until = None
     
@@ -411,14 +410,14 @@ if not st.session_state.authenticated:
             if check_credentials(username, password):
                 st.session_state.authenticated = True
                 st.session_state.username = username
-                st.session_state.login_time = datetime.datetime.now()
+                st.session_state.login_time = datetime.now()
                 st.session_state.failed_attempts = 0
                 st.rerun()
             else:
                 st.session_state.failed_attempts += 1
                 if st.session_state.failed_attempts >= 5:
                     # Verrouiller le compte pour 15 minutes après 5 tentatives échouées
-                    st.session_state.locked_until = datetime.datetime.now() + datetime.timedelta(minutes=15)
+                    st.session_state.locked_until = datetime.now() + timedelta(minutes=15)
                     st.error(f"Trop de tentatives échouées. Compte verrouillé pour 15 minutes.")
                 else:
                     st.error(f"Nom d'utilisateur ou mot de passe incorrect. Tentative {st.session_state.failed_attempts}/5")
