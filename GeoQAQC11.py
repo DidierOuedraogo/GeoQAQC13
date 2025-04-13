@@ -37,11 +37,19 @@ def hash_password(password):
 
 # Vérifier si un utilisateur est autorisé
 def check_credentials(username, password):
-    # Liste des utilisateurs autorisés (format : nom d'utilisateur: mot de passe haché)
+    # Les mots de passe sont déjà hashés pour la sécurité
+    # Format: nom d'utilisateur: mot de passe haché
     authorized_users = {
-        "admin": hash_password("admin123"),  # admin/admin123
-        "didier": hash_password("geo2025"),  # didier/geo2025
-        "usertest": hash_password("test123") # usertest/test123
+        # Comptes administratifs
+        "admin": hash_password("KQwerty!2025"),
+        "didier": hash_password("G30l0gy!2025"),
+        
+        # Comptes utilisateurs
+        "user1": hash_password("Spring@2025"),
+        "user2": hash_password("Summer@2025"),
+        "user3": hash_password("Autumn@2025"),
+        "user4": hash_password("Winter@2025"),
+        "user5": hash_password("Mining@2025")
     }
     
     if username in authorized_users:
@@ -415,12 +423,9 @@ if not st.session_state.authenticated:
                 else:
                     st.error(f"Nom d'utilisateur ou mot de passe incorrect. Tentative {st.session_state.failed_attempts}/5")
     
-    # Informations sur les comptes de test
+    # Information de contact et aide (sans les comptes de test)
     st.markdown("---")
-    st.markdown("### Comptes de test:")
-    st.markdown("- **admin / admin123**")
-    st.markdown("- **didier / geo2025**")
-    st.markdown("- **usertest / test123**")
+    st.markdown("Si vous avez besoin d'accès à cette application, veuillez contacter l'administrateur.")
     
     # Arrêter l'exécution du reste du script
     st.stop()
